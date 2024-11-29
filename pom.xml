@@ -12,7 +12,7 @@
 	<groupId>com.rekha</groupId>
 	<artifactId>ecommerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>Rekha</name>
 	<description>Rekha</description>
 	<url />
