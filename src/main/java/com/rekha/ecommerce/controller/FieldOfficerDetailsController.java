@@ -32,22 +32,12 @@ public class FieldOfficerDetailsController {
 
 	@Autowired
 	FieldOfficerDetailsService fieldOfficerDetailsService;
-	
+
 	@Autowired
 	SecUserService secUserService;
 
 	@GetMapping("/getFieldOfficers")
 	public ResponseObject<?> getAllFieldsOfficers() {
-		String token = request.getHeader("Authorization");
-		token = StringUtils.replace(token, "Bearer ", "");
-		
-		Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
-		String phoneNumber = claims.getSubject();
-
-		if (!secUserService.hasPermissions(phoneNumber)) {
-			throw new CloudBaseException(ResponseCode.INVALID_PERMISSIONS);
-		}
-
 		return fieldOfficerDetailsService.getAll();
 
 	}

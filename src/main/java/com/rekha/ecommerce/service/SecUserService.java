@@ -135,6 +135,16 @@ public class SecUserService {
 		}
 		return false;
 	}
+	
+	
+	public boolean hasPermissionsForFO(String phoneNumber) {
+		SecUser secUser = secUserRepository.findByPhoneNumber(phoneNumber);
+
+		if (secUser != null && secUser.getIsFieldOfficer()) {
+			return true;
+		}
+		return false;
+	}
 
 	public ResponseObject<SecUserDTO> getProfile(String phoneNumber) {
 

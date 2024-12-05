@@ -31,16 +31,17 @@ public class CustomerTickets implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ticket_id")
-	private Long ticketId;
+	@Column(name = "id")
+	private Long id;
 
 	@Column(name = "date", nullable = false)
-	@CreationTimestamp
 	private LocalDate date;
 
-	@Lob
-	@Column(name = "crop_image")
-	private Blob cropImage;
+	@Column(name = "ticket_id", nullable = false)
+	private String ticketId;
+
+	@Column(name = "crop_image_id", nullable = false)
+	private Long cropImageId;
 
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
@@ -51,17 +52,17 @@ public class CustomerTickets implements Serializable {
 	@Column(name = "customer_name", nullable = false, length = 100)
 	private String customerName;
 
-	@Column(name = "problem", columnDefinition = "TEXT")
-	private String problem;
-
 	@Column(name = "solution", columnDefinition = "TEXT")
 	private String solution;
 
 	@Column(name = "type")
 	private String type;
 
-	@Column(name = "field_officer_name", nullable = false, length = 56)
+	@Column(name = "field_officer_name", length = 56)
 	private String fieldOfficerName;
+
+	@Column(name = "field_officer_phone_number", length = 20)
+	private String fieldOfficerPhoneNumber;
 
 	@Column(name = "status", length = 20)
 	private String status;
@@ -80,11 +81,10 @@ public class CustomerTickets implements Serializable {
 	@UpdateTimestamp
 	private LocalDateTime lastModifiedDate;
 
-	
 	@ManyToOne
 	@JoinColumn(name = "phone_number", referencedColumnName = "phone_number", insertable = false, updatable = false)
 	private SecUser secUser;
-	
+
 //	picture list need to store in other tbl
 
 }

@@ -139,7 +139,47 @@ public class ProductsService {
 			Products productEntity = new Products();
 			productsDTO.setLastModifiedBy(userName);
 			BeanUtils.copyProperties(productsDTO, productEntity);
-			productsRepository.save(productEntity);
+			
+			Long id = productsRepository.save(productEntity).getProductId();
+
+			List<ProductImages> imageList = new ArrayList<>();
+
+			productsDTO.getProductImages().forEach(image -> {
+				Blob productImageBlob = null;
+				try {
+					productImageBlob = new SerialBlob(image);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				ProductImages imageEntity = new ProductImages();
+				if(imageEntity.getId() == null) {
+					imageEntity.setProductId(id);
+					imageEntity.setProductImage(productImageBlob);
+					imageEntity.setCreatedBy(userName);
+				}else {
+					imageEntity.setLastModifiedBy(userName);
+				}
+				
+				imageList.add(imageEntity);
+			});
+			// product images List save
+			imagesRepository.saveAll(imageList);
+
+			List<ProductQuantity> prodQuantityList = new ArrayList<>();
+			productsDTO.getProductQuantityDTOList().forEach(prodQunty -> {
+				ProductQuantity quantity = new ProductQuantity();
+				BeanUtils.copyProperties(prodQunty, quantity);
+				if(quantity.getId() == null) {
+					quantity.setCreatedBy(userName);
+					quantity.setProductId(id);
+				}else {
+					quantity.setLastModifiedBy(userName);
+				}
+				prodQuantityList.add(quantity);
+			});
+			// product quantity save
+			productQuantityRepository.saveAll(prodQuantityList);
+			
 			ProductsDTO response = new ProductsDTO();
 			BeanUtils.copyProperties(productEntity, response);
 			return ResponseObject.success(response);

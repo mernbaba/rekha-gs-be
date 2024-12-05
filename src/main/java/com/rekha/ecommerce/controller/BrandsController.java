@@ -42,15 +42,16 @@ public class BrandsController {
 	@GetMapping("/getBrands")
 	public ResponseObject<List<BrandsDTO>> getBrandsByCategory(@RequestParam String category) {
 
-		String token = request.getHeader("Authorization");
-		token = StringUtils.replace(token, "Bearer ", "");
+//		String token = request.getHeader("Authorization");
+//		token = StringUtils.replace(token, "Bearer ", "");
+//
+//		Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
+//		String phoneNumber = claims.getSubject();
 
-		Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
-		String phoneNumber = claims.getSubject();
-
-		if (!secUserService.hasPermissions(phoneNumber)) {
-			throw new CloudBaseException(ResponseCode.INVALID_PERMISSIONS);
-		}
+		/*
+		 * if (!secUserService.hasPermissions(phoneNumber)) { throw new
+		 * CloudBaseException(ResponseCode.INVALID_PERMISSIONS); }
+		 */
 
 		return brandsService.getBrandsByCategory(category);
 	}

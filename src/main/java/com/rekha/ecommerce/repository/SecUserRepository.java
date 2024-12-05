@@ -11,4 +11,6 @@ public interface SecUserRepository extends JpaRepository<SecUser, Long>, JpaSpec
 
 	SecUser findByPhoneNumber(String username);
 
+	SecUser findByPhoneNumberAndIsActive(String phoneNumber, boolean b);
+
 }

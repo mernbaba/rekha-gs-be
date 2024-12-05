@@ -35,6 +35,8 @@ public class OrderDTO {
 
 	private String orderStatus;
 
+	private String agentPhoneNumber;
+
 	private LocalDate deliveryDate;
 
 	private String deliveryAddress;

@@ -92,50 +92,17 @@ public class OrderService {
 	}
 
 	public ResponseObject<?> getUserOrders(String phoneNumber) {
-		List<OrdersResponse> responses = new ArrayList<>();
-
-		/*
-		 * List<OrderDTO> orderDTOS = new ArrayList<OrderDTO>();
-		 * 
-		 * orderRepository.findByPhoneNumber(phoneNumber).forEach(entity -> { OrderDTO
-		 * dto = new OrderDTO(); BeanUtils.copyProperties(entity, dto);
-		 * orderDTOS.add(dto); });
-		 */
 
 		List<Order> orderEntities = orderRepository.findByPhoneNumber(phoneNumber);
+		return getOders(orderEntities);
+	}
 
-		List<Long> orderIds = orderEntities.stream().map(Order::getId).toList();
+	public ResponseObject<?> getFOAssignedOrders(String phoneNumber) {
 
-		List<OrderItems> orderItemsList = orderItemsRepository.findByOrderId(orderIds);
+		List<Order> orderEntities = orderRepository.findByAgentPhoneNumber(phoneNumber);
 
-		orderEntities.forEach(entity -> {
-			OrdersResponse response = new OrdersResponse();
+		return getOders(orderEntities);
 
-			OrderDTO dto = new OrderDTO();
-			BeanUtils.copyProperties(entity, dto);
-			response.setOrderDTO(dto);
-
-			List<OrderItemsDTO> itemsDTOList = orderItemsList.stream()
-					.filter(items -> items.getOrderId().equals(entity.getId())).map(items -> {
-						OrderItemsDTO itemsDTO = new OrderItemsDTO();
-						BeanUtils.copyProperties(items, itemsDTO);
-						if (items.getItemImage() != null) {
-							try {
-								byte[] brandImageBytes = items.getItemImage().getBytes(1,
-										(int) items.getItemImage().length());
-								itemsDTO.setItemImage(brandImageBytes);
-							} catch (SQLException e) {
-								e.printStackTrace();
-							}
-						}
-
-						return itemsDTO;
-					}).collect(Collectors.toList());
-			response.setOrderItemsDTOList(itemsDTOList);
-			responses.add(response);
-		});
-
-		return ResponseObject.success(responses);
 	}
 
 	@Transactional
@@ -229,14 +196,41 @@ public class OrderService {
 		}
 	}
 
-	/*
-	 * private static String generateOrderID() { SimpleDateFormat dateFormat = new
-	 * SimpleDateFormat("yyyyMMddHHmmss"); String timestamp = dateFormat.format(new
-	 * Date());
-	 * 
-	 * Random random = new Random(); int randomNum = random.nextInt(9000) + 1000;
-	 * 
-	 * return "ORD#" + timestamp + randomNum; }
-	 */
+	public ResponseObject<?> getOders(List<Order> orderEntities) {
 
+		List<OrdersResponse> responses = new ArrayList<>();
+		List<Long> orderIds = orderEntities.stream().map(Order::getId).toList();
+
+		List<OrderItems> orderItemsList = orderItemsRepository.findByOrderId(orderIds);
+
+		orderEntities.forEach(entity -> {
+			OrdersResponse response = new OrdersResponse();
+
+			OrderDTO dto = new OrderDTO();
+			BeanUtils.copyProperties(entity, dto);
+			response.setOrderDTO(dto);
+
+			List<OrderItemsDTO> itemsDTOList = orderItemsList.stream()
+					.filter(items -> items.getOrderId().equals(entity.getId())).map(items -> {
+						OrderItemsDTO itemsDTO = new OrderItemsDTO();
+						BeanUtils.copyProperties(items, itemsDTO);
+						if (items.getItemImage() != null) {
+							try {
+								byte[] orderImageBytes = items.getItemImage().getBytes(1,
+										(int) items.getItemImage().length());
+								itemsDTO.setItemImage(orderImageBytes);
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+
+						return itemsDTO;
+					}).collect(Collectors.toList());
+			response.setOrderItemsDTOList(itemsDTOList);
+			responses.add(response);
+		});
+
+		return ResponseObject.success(responses);
+
+	}
 }

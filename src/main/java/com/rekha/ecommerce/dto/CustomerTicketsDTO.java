@@ -8,11 +8,15 @@ import lombok.Data;
 @Data
 public class CustomerTicketsDTO {
 
-	private Long ticketId;
+	private Long id;
 
 	private LocalDate date;
 
-	private byte[] cropImage;
+	private String ticketId;
+
+	private Long cropImageId;
+	
+	private String description;
 
 	private String phoneNumber;
 
@@ -23,6 +27,10 @@ public class CustomerTicketsDTO {
 	private String problem;
 
 	private String fieldOfficerName;
+
+	private String fieldOfficerPhoneNumber;
+
+	private String status;
 
 	private String createdBy;
 

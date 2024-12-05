@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rekha.ecommerce.config.JwtTokenUtil;
-import com.rekha.ecommerce.dto.OrderDTO;
 import com.rekha.ecommerce.dto.ResponseObject;
 import com.rekha.ecommerce.enumeration.ResponseCode;
 import com.rekha.ecommerce.exception.CloudBaseException;
@@ -73,7 +72,7 @@ public class OrderController {
 
 	}
 	
-	@GetMapping("/getUserOrders")
+	@GetMapping("/getuserOrders")
 	public ResponseObject<?> getUserOrders(){
 		String token = request.getHeader("Authorization");
 		token = StringUtils.replace(token, "Bearer ", "");
@@ -83,6 +82,18 @@ public class OrderController {
 		
 		return orderService.getUserOrders(phoneNumber);
 	}
+	
+	@GetMapping("/getFOOrders")
+	public ResponseObject<?> getFOOrders(){
+		String token = request.getHeader("Authorization");
+		token = StringUtils.replace(token, "Bearer ", "");
+
+		Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
+		String phoneNumber = claims.getSubject();
+		
+		return orderService.getFOAssignedOrders(phoneNumber);
+	}
+	
 	
 	@PostMapping("/save")
 	public ResponseObject<?> save(@RequestBody OrdersRequest dto) {

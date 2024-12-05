@@ -2,20 +2,17 @@ package com.rekha.ecommerce.dto;
 
 import java.sql.Blob;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class BlogDTO {
+public class BlogImagesDTO {
 
 	private Long id;
 
-	private List<BlogImagesDTO> images;
+	private Long blogId;
 
-	private String description;
-
-	private Boolean isActive;
+	private byte[] blogImage;
 
 	private String createdBy;
 

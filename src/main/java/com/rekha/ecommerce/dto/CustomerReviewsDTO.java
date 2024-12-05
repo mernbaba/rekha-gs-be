@@ -9,6 +9,8 @@ public class CustomerReviewsDTO {
 
 	private Long id;
 
+	private Long productId;
+
 	private String customerName;
 
 	private String phoneNumber;

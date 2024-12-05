@@ -61,6 +61,9 @@ public class Order {
 
 	@Column(name = "order_status", nullable = false, length = 56)
 	private String orderStatus;
+	
+	@Column(name = "agent_phone_umber", length = 20)
+	private String agentPhoneNumber;
 
 	@Column(name = "delivery_date")
 	private LocalDate deliveryDate;

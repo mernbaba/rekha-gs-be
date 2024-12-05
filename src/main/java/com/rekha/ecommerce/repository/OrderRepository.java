@@ -15,5 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
 	List<Order> findByPhoneNumber(String phoneNumber);
 
+	List<Order> findByAgentPhoneNumber(String phoneNumber);
+
 
 }
