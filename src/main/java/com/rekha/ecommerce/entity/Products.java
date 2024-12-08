@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -40,6 +39,9 @@ public class Products {
 
 	@Column(name = "rating")
 	private Integer rating;
+
+	@Column(name = "technical_name", nullable = false, length = 100)
+	private String technicalName;
 
 	@Column(name = "brand_name", nullable = false, length = 56)
 	private String brandName;

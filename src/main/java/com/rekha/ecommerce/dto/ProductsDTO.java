@@ -12,6 +12,8 @@ public class ProductsDTO {
 
 	private String productName;
 
+	private String technicalName;
+
 	private String description;
 
 	private Integer rating;

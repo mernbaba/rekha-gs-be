@@ -35,7 +35,7 @@ public class SecUser {
 	private String password;
 	
 	@Lob
-	@Column(name = "profile", nullable = false)
+	@Column(name = "profile")
 	private Blob profile;
 
 	@Column(name = "user_code", unique = true, nullable = false, length = 56)

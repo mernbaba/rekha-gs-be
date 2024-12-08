@@ -13,6 +13,8 @@ public class CustomerReviewsDTO {
 
 	private String customerName;
 
+	private byte[] customerAvatar;
+
 	private String phoneNumber;
 
 	private Integer rating;

@@ -16,10 +16,12 @@ import com.rekha.ecommerce.dto.BlogImagesDTO;
 import com.rekha.ecommerce.dto.ResponseObject;
 import com.rekha.ecommerce.entity.Blog;
 import com.rekha.ecommerce.entity.BlogImages;
+import com.rekha.ecommerce.entity.SecUser;
 import com.rekha.ecommerce.enumeration.ResponseCode;
 import com.rekha.ecommerce.exception.CloudBaseException;
 import com.rekha.ecommerce.repository.BlogImagesRepository;
 import com.rekha.ecommerce.repository.BolgRepository;
+import com.rekha.ecommerce.repository.SecUserRepository;
 import com.rekha.ecommerce.utils.ImageConversion;
 import com.rekha.ecommerce.utils.ObjectMapperUtil;
 
@@ -33,6 +35,9 @@ public class BlogService {
 
 	@Autowired
 	BlogImagesRepository blogImagesRepository;
+
+	@Autowired
+	private SecUserRepository secUserRepository;
 
 	public ResponseObject<?> getAllBlogs() {
 
@@ -99,14 +104,18 @@ public class BlogService {
 
 		try {
 			Blog blogEntity = ObjectMapperUtil.convertDTOToEntity(dto, Blog.class);
+			SecUser secUser = secUserRepository.findByPhoneNumberAndIsActive(phoneNumber, true);
 
-			try {
-				if (dto.getAuthorAvatar() != null) {
-					Blob blogAvatar = ImageConversion.byteToBlobConversion(dto.getAuthorAvatar());
-					blogEntity.setAuthorAvatar(blogAvatar);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+			/*try {
+					if (dto.getAuthorAvatar() != null) {
+						Blob blogAvatar = ImageConversion.byteToBlobConversion(dto.getAuthorAvatar());
+						blogEntity.setAuthorAvatar(blogAvatar);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}*/
+			if (secUser != null && secUser.getProfile() != null) {
+				blogEntity.setAuthorAvatar(secUser.getProfile());
 			}
 			blogEntity.setAuthorName(userName);
 			blogEntity.setCreatedBy(userName);

@@ -1,6 +1,7 @@
 package com.rekha.ecommerce.entity;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -37,6 +39,10 @@ public class CustomerReviews implements Serializable {
 
 	@Column(name = "customer_name", nullable = false, length = 100)
 	private String customerName;
+	
+	@Lob
+	@Column(name = "customer_avatar")
+	private Blob customerAvatar;
 
 	@Column(name = "phone_number", nullable = false, length = 20)
 	private String phoneNumber;
