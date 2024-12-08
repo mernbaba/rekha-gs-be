@@ -21,8 +21,10 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tb_customer_reviews", uniqueConstraints = @UniqueConstraint(name = "uk_review", columnNames = {
-		"product_id", "phone_number" }))
+@Table(name = "tb_customer_reviews"/*
+									 * , uniqueConstraints = @UniqueConstraint(name = "uk_review", columnNames = {
+									 * "product_id", "phone_number" })
+									 */)
 public class CustomerReviews implements Serializable {
 	/**
 	* 

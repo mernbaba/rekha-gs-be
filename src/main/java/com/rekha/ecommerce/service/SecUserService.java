@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.rekha.ecommerce.dto.ResponseObject;
 import com.rekha.ecommerce.dto.SecUserDTO;
+import com.rekha.ecommerce.entity.FieldOfficerDetails;
 import com.rekha.ecommerce.entity.SecUser;
 import com.rekha.ecommerce.enumeration.ResponseCode;
 import com.rekha.ecommerce.exception.CloudBaseException;
@@ -62,16 +63,21 @@ public class SecUserService {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-
+			secUserEntity.setCreatedBy(secUserDTO.getUserName());
 			secUserEntity.setPassword(encoder.encode(secUserEntity.getPassword()));
+			
+			
 			if (adminPhoneNumbers.contains(secUserEntity.getPhoneNumber())) {
 				secUserEntity.setIsAdmin(true);
-			}
-			if (fieldOfficeDetailsRepository.findByPhoneNumber(secUserDTO.getPhoneNumber()) != null) {
-				secUserEntity.setIsFieldOfficer(true);
+				secUserEntity.setCreatedBy("system");
 			}
 
-			secUserEntity.setCreatedBy("system");
+			FieldOfficerDetails foDetails = fieldOfficeDetailsRepository.findByPhoneNumber(secUserDTO.getPhoneNumber());
+			if (foDetails != null) {
+				secUserEntity.setIsFieldOfficer(true);
+				secUserEntity.setCreatedBy(foDetails.getFieldOfficerName());
+			}
+
 			secUserEntity.setUserCode("");
 			secUserEntity.setIsActive(true);
 			secUserEntity = secUserRepository.save(secUserEntity);
@@ -110,7 +116,7 @@ public class SecUserService {
 
 			SecUser secUserEntity = secUserRepository.findById(secUserDTO.getId())
 					.orElseThrow(() -> new CloudBaseException(ResponseCode.NOT_FOUND));
-
+			String pwd = secUserEntity.getPassword();
 			BeanUtils.copyProperties(secUserDTO, secUserEntity);
 
 			try {
@@ -121,7 +127,7 @@ public class SecUserService {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-
+			secUserEntity.setPassword(pwd);
 			secUserEntity.setLastModifiedBy(userName);
 			secUserEntity = secUserRepository.save(secUserEntity);
 
