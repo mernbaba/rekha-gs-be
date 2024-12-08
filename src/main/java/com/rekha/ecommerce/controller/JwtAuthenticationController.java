@@ -5,12 +5,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rekha.ecommerce.dto.ResponseObject;
 import com.rekha.ecommerce.dto.SecUserDTO;
+import com.rekha.ecommerce.enumeration.ResponseCode;
 import com.rekha.ecommerce.request.JwtRequest;
 import com.rekha.ecommerce.request.RazorpayRequest;
+import com.rekha.ecommerce.service.OtpService;
 import com.rekha.ecommerce.service.RazorpayService;
 import com.rekha.ecommerce.service.SecUserService;
 
@@ -26,12 +29,12 @@ public class JwtAuthenticationController {
 
 	@Autowired
 	HttpServletRequest request;
-	
+
 	@Autowired
 	private RazorpayService razorpayService;
 
-//	@Autowired
-//	private OtpService otpService;
+	@Autowired
+	private OtpService otpService;
 
 //	@PostMapping("/authenticate")
 //	public ResponseObject<?> createAuthenticationToken(@RequestParam("phoneNumber") String phoneNumber,
@@ -63,19 +66,20 @@ public class JwtAuthenticationController {
 		return secUserService.authenticateUser(authenticationRequest);
 	}
 
-//	@PostMapping("/send-otp")
-//	public String sendOtp(@RequestParam("phoneNumber") String phoneNumber) {
-//		otpService.sendOtp(phoneNumber);
-//		return "OTP sent successfully to " + phoneNumber;
-//	}
+	@PostMapping("/forgotPassword")
+	public String forgotPassword(@RequestParam("phoneNumber") String phoneNumber) {
+		otpService.sendOtp(phoneNumber);
+		return "OTP sent successfully to " + phoneNumber;
+	}
+
 //
-//	@PostMapping("/verify-otp")
-//	public ResponseObject<?> verifyOtp(@RequestParam("phoneNumber") String phoneNumber,
-//			@RequestParam("otp") String otp) {
-//
-//		ResponseCode response = otpService.validateOtp(phoneNumber, otp);
-//		return new ResponseObject<>(response);
-//	}
+	@PostMapping("/resetPassword")
+	public ResponseObject<?> verifyOtpAndResetPassword(@RequestParam("phoneNumber") String phoneNumber,
+			@RequestParam String pwd, @RequestParam("otp") String otp) {
+
+		ResponseObject<ResponseCode> response = otpService.verifyOtpAndResetPassword(phoneNumber, pwd, otp);
+		return response;
+	}
 
 	@PostMapping("/register")
 	public ResponseObject<?> registerUser(@RequestBody SecUserDTO secUserDTO) {
@@ -98,11 +102,11 @@ public class JwtAuthenticationController {
 //		return new ResponseEntity<String>(fileContent, headers, HttpStatus.OK);
 //	}
 
-	@PostMapping(value="/razorPayOrder" , produces = "application/json")
-	public ResponseObject<?> razorPayOrder(@RequestBody RazorpayRequest razorpayRequest)throws Exception {
+	@PostMapping(value = "/razorPayOrder", produces = "application/json")
+	public ResponseObject<?> razorPayOrder(@RequestBody RazorpayRequest razorpayRequest) throws Exception {
 		return razorpayService.razorpaySave(razorpayRequest);
 	}
-	
+
 	@PostMapping("/razorPayment")
 	public Boolean createPayment(@RequestBody RazorpayRequest razorPaymentRequest) throws Exception {
 		return razorpayService.createRazorpayPayment(razorPaymentRequest);

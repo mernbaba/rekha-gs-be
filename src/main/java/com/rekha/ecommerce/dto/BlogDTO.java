@@ -1,6 +1,6 @@
 package com.rekha.ecommerce.dto;
 
-import java.sql.Blob;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +13,15 @@ public class BlogDTO {
 
 	private List<BlogImagesDTO> images;
 
-	private String description;
+	private String authorName;
+
+	private byte[] authorAvatar;
+
+	private String authorRole;
+
+	private LocalDate date;
+
+	private String content;
 
 	private Boolean isActive;
 

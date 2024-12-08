@@ -2,6 +2,7 @@ package com.rekha.ecommerce.entity;
 
 import java.io.Serializable;
 import java.sql.Blob;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,12 +32,21 @@ public class Blog implements Serializable {
 	@Column(name = "id")
 	private Long id;
 
-	@Lob
-	@Column(name ="image")
-	private Blob image;
+	@Column(name = "author_name", nullable = false, length = 56)
+	private String authorName;
 
-	@Column(name = "description", columnDefinition = "TEXT")
-	private String description;
+	@Lob
+	@Column(name = "author_avatar")
+	private Blob authorAvatar;
+
+	@Column(name = "author_role", nullable = false, length = 56)
+	private String authorRole;
+
+	@Column(name = "date")
+	private LocalDate date;
+
+	@Column(name = "content", columnDefinition = "TEXT")
+	private String content;
 
 	@Column(name = "is_active")
 	private Boolean isActive;

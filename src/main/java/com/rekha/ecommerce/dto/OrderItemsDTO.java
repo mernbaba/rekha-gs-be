@@ -11,6 +11,7 @@ public class OrderItemsDTO {
 	private Long id;
 	private Long orderId;
 	private String item;
+	private Long productId;
 	private String brandName;
 	private byte[] itemImage;
 	private String weight;

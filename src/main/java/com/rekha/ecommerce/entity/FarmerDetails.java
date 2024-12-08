@@ -1,6 +1,6 @@
 package com.rekha.ecommerce.entity;
 
-import java.sql.Blob;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,41 +11,34 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tb_sec_user")
-public class SecUser {
+@Table(name = "farmer_details")
+public class FarmerDetails implements Serializable {
+	/**
+	* 
+	*/
+	private static final long serialVersionUID = -947709722994959079L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "farmer_name", nullable = false, length = 56)
+	private String farmerName;
+
 	@Column(name = "phone_number", unique = true, nullable = false, length = 20)
 	private String phoneNumber;
 
-	@Column(name = "user_name", nullable = false, length = 32)
-	private String userName;
+	@Column(name = "village_name", nullable = false, length = 100)
+	private String villageName;
 
-	@Column(name = "password", nullable = false)
-	private String password;
-	
-	@Lob
-	@Column(name = "profile", nullable = false)
-	private Blob profile;
-
-	@Column(name = "user_code", unique = true, nullable = false, length = 56)
-	private String userCode;
-
-	@Column(name = "is_admin")
-	private Boolean isAdmin;
-
-	@Column(name = "is_field_officer")
-	private Boolean isFieldOfficer;
+	@Column(name = "manual_village_name", length = 100)
+	private String manualVillageName;
 
 	@Column(name = "is_active", nullable = false)
 	private Boolean isActive;
@@ -66,15 +59,8 @@ public class SecUser {
 
 	@PrePersist
 	protected void onCreate() {
-		if (isAdmin == null) {
-			isAdmin = false;
-		}
-		if (isFieldOfficer == null) {
-			isFieldOfficer = false;
-		}
 		if (isActive == null) {
 			isActive = true;
 		}
 	}
-
 }

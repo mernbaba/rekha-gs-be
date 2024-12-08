@@ -1,5 +1,7 @@
 package com.rekha.ecommerce.service;
 
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -18,6 +20,7 @@ import com.rekha.ecommerce.repository.FieldOfficeDetailsRepository;
 import com.rekha.ecommerce.repository.SecUserRepository;
 import com.rekha.ecommerce.request.JwtRequest;
 import com.rekha.ecommerce.response.JwtResponse;
+import com.rekha.ecommerce.utils.ImageConversion;
 
 import jakarta.transaction.Transactional;
 
@@ -51,6 +54,15 @@ public class SecUserService {
 			}
 			secUserEntity = new SecUser();
 			BeanUtils.copyProperties(secUserDTO, secUserEntity);
+			try {
+				if (secUserDTO.getProfile() != null) {
+					Blob blobProfile = ImageConversion.byteToBlobConversion(secUserDTO.getProfile());
+					secUserEntity.setProfile(blobProfile);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
 			secUserEntity.setPassword(encoder.encode(secUserEntity.getPassword()));
 			if (adminPhoneNumbers.contains(secUserEntity.getPhoneNumber())) {
 				secUserEntity.setIsAdmin(true);
@@ -69,6 +81,62 @@ public class SecUserService {
 
 			SecUserDTO response = new SecUserDTO();
 			BeanUtils.copyProperties(secUserEntity, response);
+			Blob blogProfile = secUserEntity.getProfile();
+			if (blogProfile != null) {
+				try {
+					byte[] byteImage = ImageConversion.blobToByteConversion(blogProfile);
+					response.setProfile(byteImage);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			response.setPassword(null);
+			return ResponseObject.success(response);
+
+		} catch (CloudBaseException exp) {
+			exp.printStackTrace();
+			throw exp;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CloudBaseException(ResponseCode.ERROR_STORING_DATA);
+		}
+
+	}
+
+	@Transactional
+	public ResponseObject<?> updateUser(SecUserDTO secUserDTO, String phoneNumber, String userName) {
+		try {
+
+			SecUser secUserEntity = secUserRepository.findById(secUserDTO.getId())
+					.orElseThrow(() -> new CloudBaseException(ResponseCode.NOT_FOUND));
+
+			BeanUtils.copyProperties(secUserDTO, secUserEntity);
+
+			try {
+				if (secUserDTO.getProfile() != null) {
+					Blob blobProfile = ImageConversion.byteToBlobConversion(secUserDTO.getProfile());
+					secUserEntity.setProfile(blobProfile);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			secUserEntity.setLastModifiedBy(userName);
+			secUserEntity = secUserRepository.save(secUserEntity);
+
+			SecUserDTO response = new SecUserDTO();
+			BeanUtils.copyProperties(secUserEntity, response);
+			Blob blogProfile = secUserEntity.getProfile();
+			if (blogProfile != null) {
+				try {
+					byte[] byteImage = ImageConversion.blobToByteConversion(blogProfile);
+					response.setProfile(byteImage);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
 			response.setPassword(null);
 			return ResponseObject.success(response);
 
@@ -135,8 +203,7 @@ public class SecUserService {
 		}
 		return false;
 	}
-	
-	
+
 	public boolean hasPermissionsForFO(String phoneNumber) {
 		SecUser secUser = secUserRepository.findByPhoneNumber(phoneNumber);
 
@@ -152,10 +219,31 @@ public class SecUserService {
 		if (secUser != null && ObjectUtils.isNotEmpty(secUser)) {
 			SecUserDTO dto = new SecUserDTO();
 			BeanUtils.copyProperties(secUser, dto);
+
+			Blob blobProfile = secUser.getProfile();
+			if (blobProfile != null) {
+				try {
+					byte[] byteImage = ImageConversion.blobToByteConversion(blobProfile);
+					dto.setProfile(byteImage);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			dto.setPassword(null);
 			return ResponseObject.success(dto);
 		} else {
 			throw new CloudBaseException(ResponseCode.USER_NOT_FOUND);
+		}
+
+	}
+
+	public ResponseObject<String> changePassword(String newPwd, String phoneNumber, String userName) {
+		String pwd = encoder.encode(newPwd);
+		try {
+			secUserRepository.updatePassword(phoneNumber, pwd, userName);
+			return new ResponseObject<String>("Password Updated Successful", ResponseCode.SUCCESS);
+		} catch (Exception e) {
+			throw new CloudBaseException(ResponseCode.INVALID_QUERY);
 		}
 
 	}

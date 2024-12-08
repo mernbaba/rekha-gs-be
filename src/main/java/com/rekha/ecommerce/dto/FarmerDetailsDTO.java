@@ -1,29 +1,29 @@
 package com.rekha.ecommerce.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import lombok.Data;
 
 @Data
-public class SecUserDTO {
+public class FarmerDetailsDTO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 532807610197921660L;
 
 	private Long id;
 
+	private String farmerName;
+
 	private String phoneNumber;
-	
-	private String password;
 
-	private String userName;
-	
-	private byte [] profile;
+	private String villageName;
 
-	private String userCode;
+	private String manualVillageName;
 
-	private Boolean isAdmin;
-	
 	private Boolean isActive;
-
-	private Boolean isFieldOfficer;
 
 	private String createdBy;
 

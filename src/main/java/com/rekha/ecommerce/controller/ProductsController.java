@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rekha.ecommerce.config.JwtTokenUtil;
+import com.rekha.ecommerce.dto.ProductQuantityDTO;
 import com.rekha.ecommerce.dto.ProductsDTO;
 import com.rekha.ecommerce.dto.ResponseObject;
 import com.rekha.ecommerce.enumeration.ResponseCode;
@@ -74,15 +75,20 @@ public class ProductsController {
 	@GetMapping("/getProducts/{brand}")
 	public ResponseObject<List<ProductsDTO>> getProductsByBrand(@PathVariable String brand) {
 
-		String token = request.getHeader("Authorization");
-		token = StringUtils.replace(token, "Bearer ", "");
-
-		Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
-		String phoneNumber = claims.getSubject();
+//		String token = request.getHeader("Authorization");
+//		token = StringUtils.replace(token, "Bearer ", "");
+//
+//		Claims claims = jwtTokenUtil.getAllClaimsFromToken(token);
+//		String phoneNumber = claims.getSubject();
 //		if (!secUserService.hasPermissions(phoneNumber)) {
 //			throw new CloudBaseException(ResponseCode.INVALID_PERMISSIONS);
 //		}
 		return productsService.getProductsByBrand(brand);
+	}
+
+	@PostMapping("/getProductsByQuantity")
+	public ResponseObject<List<ProductsDTO>> getProducts(@RequestBody List<ProductQuantityDTO> dtoList) {
+		return productsService.getProductsByQuantity(dtoList);
 	}
 
 }

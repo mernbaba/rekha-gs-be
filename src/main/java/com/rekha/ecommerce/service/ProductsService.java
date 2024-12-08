@@ -139,7 +139,7 @@ public class ProductsService {
 			Products productEntity = new Products();
 			productsDTO.setLastModifiedBy(userName);
 			BeanUtils.copyProperties(productsDTO, productEntity);
-			
+
 			Long id = productsRepository.save(productEntity).getProductId();
 
 			List<ProductImages> imageList = new ArrayList<>();
@@ -152,14 +152,14 @@ public class ProductsService {
 					e.printStackTrace();
 				}
 				ProductImages imageEntity = new ProductImages();
-				if(imageEntity.getId() == null) {
+				if (imageEntity.getId() == null) {
 					imageEntity.setProductId(id);
 					imageEntity.setProductImage(productImageBlob);
 					imageEntity.setCreatedBy(userName);
-				}else {
+				} else {
 					imageEntity.setLastModifiedBy(userName);
 				}
-				
+
 				imageList.add(imageEntity);
 			});
 			// product images List save
@@ -169,17 +169,17 @@ public class ProductsService {
 			productsDTO.getProductQuantityDTOList().forEach(prodQunty -> {
 				ProductQuantity quantity = new ProductQuantity();
 				BeanUtils.copyProperties(prodQunty, quantity);
-				if(quantity.getId() == null) {
+				if (quantity.getId() == null) {
 					quantity.setCreatedBy(userName);
 					quantity.setProductId(id);
-				}else {
+				} else {
 					quantity.setLastModifiedBy(userName);
 				}
 				prodQuantityList.add(quantity);
 			});
 			// product quantity save
 			productQuantityRepository.saveAll(prodQuantityList);
-			
+
 			ProductsDTO response = new ProductsDTO();
 			BeanUtils.copyProperties(productEntity, response);
 			return ResponseObject.success(response);
@@ -220,48 +220,26 @@ public class ProductsService {
 
 				// Get the images and quantities for the current product
 				List<ProductImages> productImages = imagesMap.getOrDefault(product.getProductId(), List.of());
-//			List<ProductImages> productImages = imagesMap.getOrDefault(product.getProductId(), new ArrayList<>());
+
 				List<ProductQuantity> productQuantities = quantitiesMap.getOrDefault(product.getProductId(), List.of());
-//			List<ProductQuantity> productQuantities = quantitiesMap.getOrDefault(product.getProductId(), new ArrayList<>());
 
-//				System.out.println("product images  :: " + productImages);
-//				System.out.println("product quantities ::  " + productQuantities);
-
-				// Convert ProductImages and ProductQuantity to DTOs using BeanUtils
-//				List<ProductImagesDTO> productImagesDTOList = productImages.stream().map(image -> {
-//					ProductImagesDTO imageDTO = new ProductImagesDTO();
-//					BeanUtils.copyProperties(image, imageDTO); 
-//					
-////					Blob productImage = ; // Assuming getBrandImage() returns a Blob
-//					if (image.get != null) {
-//						try {
-//							byte[] productImageBytes = productImage.getBytes(1, (int) brandImageBlob.length()); // Convert Blob
-//																												// to byte[]
-//							imageDTO.setProductImage(productImageBytes); // Set the byte[] in DTO
-//						} catch (SQLException e) {
-//							// Handle the error if Blob conversion fails
-//							e.printStackTrace();
-//						}
-//
-//					return imageDTO;
-//				}).collect(Collectors.toList());
-				
 				List<ProductImagesDTO> productImagesDTOList = new ArrayList<>();
-				
-				 productImages.forEach(image -> {
+
+				productImages.forEach(image -> {
 					ProductImagesDTO imageDTO = new ProductImagesDTO();
-					BeanUtils.copyProperties(image, imageDTO); 
-					
-					if(image.getProductImage() != null) {
+					BeanUtils.copyProperties(image, imageDTO);
+
+					if (image.getProductImage() != null) {
 						try {
-							byte[] productImageBytes = image.getProductImage().getBytes(1, (int) image.getProductImage().length()); // Convert Blob
-																												
+							byte[] productImageBytes = image.getProductImage().getBytes(1,
+									(int) image.getProductImage().length()); // Convert Blob
+
 							imageDTO.setProductImage(productImageBytes); // Set the byte[] in DTO
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
 					}
-					
+
 					productImagesDTOList.add(imageDTO);
 				});
 
@@ -272,12 +250,8 @@ public class ProductsService {
 				}).collect(Collectors.toList());
 
 				// Create ProductDTO that includes the product, images, and quantities
-//			ProductsDTO productDTO = new ProductsDTO();
 				productDTO.setImagesDTOs(productImagesDTOList);
 				productDTO.setProductQuantityDTOList(productQuantityDTOList);
-
-//				System.out.println(productQuantityDTOList);
-//				System.out.println(productImagesDTOList);
 
 				return productDTO;
 			}).collect(Collectors.toList());
@@ -287,6 +261,77 @@ public class ProductsService {
 			e.printStackTrace(); // Handle exceptions appropriately
 			throw new CloudBaseException(ResponseCode.BAD_REQUEST);
 		}
+	}
+
+	public ResponseObject<List<ProductsDTO>> getProductsByQuantity(List<ProductQuantityDTO> dtoList) {
+
+		try {
+			List<Long> prodIds = dtoList.stream().map(ProductQuantityDTO::getProductId).collect(Collectors.toList());
+
+			List<Long> quntIds = dtoList.stream().map(ProductQuantityDTO::getId).collect(Collectors.toList());
+
+			List<Products> productEntities = productsRepository.getProductsByIds(prodIds);
+
+			List<ProductImages> imagesList = imagesRepository.getImagesByProductIds(prodIds);
+
+			List<ProductQuantity> prodQtyList = productQuantityRepository.getProductQuantitesByProductIds(prodIds);
+
+			Map<Long, List<ProductImages>> imagesMap = imagesList.stream()
+					.collect(Collectors.groupingBy(ProductImages::getProductId));
+
+			Map<Long, List<ProductQuantity>> quantitiesMap = prodQtyList.stream()
+					.collect(Collectors.groupingBy(ProductQuantity::getProductId));
+
+			// Map each product to a ProductDTO containing its images and quantities
+			List<ProductsDTO> responseList = productEntities.stream().map(product -> {
+
+				ProductsDTO productDTO = new ProductsDTO();
+				BeanUtils.copyProperties(product, productDTO); // Copy properties from entity to DTO
+				System.out.println("Entity " + product);
+
+				// Get the images and quantities for the current product
+				List<ProductImages> productImages = imagesMap.getOrDefault(product.getProductId(), List.of());
+
+				List<ProductQuantity> productQuantities = quantitiesMap.getOrDefault(product.getProductId(), List.of());
+
+				List<ProductImagesDTO> productImagesDTOList = new ArrayList<>();
+
+				productImages.forEach(image -> {
+					ProductImagesDTO imageDTO = new ProductImagesDTO();
+					BeanUtils.copyProperties(image, imageDTO);
+
+					if (image.getProductImage() != null) {
+						try {
+							byte[] productImageBytes = image.getProductImage().getBytes(1,
+									(int) image.getProductImage().length()); // Convert Blob
+
+							imageDTO.setProductImage(productImageBytes); // Set the byte[] in DTO
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}
+
+					productImagesDTOList.add(imageDTO);
+				});
+
+				List<ProductQuantityDTO> productQuantityDTOList = productQuantities.stream()
+						.filter(quantity -> quntIds.contains(quantity.getId())).map(quantity -> {
+							ProductQuantityDTO quantityDTO = new ProductQuantityDTO();
+							BeanUtils.copyProperties(quantity, quantityDTO); // Copy properties from entity to DTO
+							return quantityDTO;
+						}).collect(Collectors.toList());
+
+				// Create ProductDTO that includes the product, images, and quantities
+				productDTO.setImagesDTOs(productImagesDTOList);
+				productDTO.setProductQuantityDTOList(productQuantityDTOList);
+
+				return productDTO;
+			}).collect(Collectors.toList());
+			return ResponseObject.success(responseList);
+		} catch (Exception e) {
+			throw new CloudBaseException(ResponseCode.UNKNOWN_ERROR_OCCURRED);
+		}
+
 	}
 
 }

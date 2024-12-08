@@ -1,6 +1,5 @@
 package com.rekha.ecommerce.dto;
 
-import java.sql.Blob;
 import java.time.LocalDateTime;
 
 import lombok.Data;
