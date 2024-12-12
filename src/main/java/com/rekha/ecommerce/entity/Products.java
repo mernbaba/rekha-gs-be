@@ -39,6 +39,9 @@ public class Products {
 
 	@Column(name = "rating")
 	private Integer rating;
+	
+	@Column(name="priority" ,nullable=false)
+	private Boolean priority;
 
 	@Column(name = "technical_name", nullable = false, length = 100)
 	private String technicalName;
@@ -75,6 +78,9 @@ public class Products {
 	protected void onCreate() {
 		if (isActive == null) {
 			isActive = true;
+		}
+		if (priority==null) {
+			priority=false;
 		}
 	}
 

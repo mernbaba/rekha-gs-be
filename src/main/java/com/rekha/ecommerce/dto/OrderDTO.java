@@ -33,6 +33,8 @@ public class OrderDTO {
 
 	private String paymentMethod;
 
+	private byte[] paymentImage;
+
 	private String orderStatus;
 
 	private String agentPhoneNumber;

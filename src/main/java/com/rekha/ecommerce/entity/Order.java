@@ -1,6 +1,7 @@
 package com.rekha.ecommerce.entity;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -58,6 +60,10 @@ public class Order {
 
 	@Column(name = "payment_method", nullable = false, length = 56)
 	private String paymentMethod;
+	
+	@Column(name="payment_image")
+	@Lob
+	private Blob paymentImage;
 
 	@Column(name = "order_status", nullable = false, length = 56)
 	private String orderStatus;

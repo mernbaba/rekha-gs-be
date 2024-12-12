@@ -18,6 +18,8 @@ public class ProductsDTO {
 
 	private Integer rating;
 
+	private Boolean priority;
+
 	private List<byte[]> productImages;
 
 	private Boolean isActive;

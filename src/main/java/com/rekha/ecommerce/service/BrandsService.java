@@ -29,8 +29,13 @@ public class BrandsService {
 	public ResponseObject<List<BrandsDTO>> getBrandsByCategory(String category) {
 
 		List<BrandsDTO> dtoList = new ArrayList<BrandsDTO>();
-
-		brandsRepository.findByCategoryName(category).forEach(entity -> {
+		List<Brands> brands = new ArrayList<>();
+		if (category != null && category.equalsIgnoreCase("All")) {
+			brands = brandsRepository.findAll();
+		} else {
+			brands = brandsRepository.findByCategoryName(category);
+		}
+		brands.forEach(entity -> {
 			BrandsDTO dto = new BrandsDTO();
 			BeanUtils.copyProperties(entity, dto);
 			Blob brandImageBlob = entity.getBrandImage(); // Assuming getBrandImage() returns a Blob
@@ -111,9 +116,9 @@ public class BrandsService {
 		brandsRepository.findAll().forEach(brand -> {
 			BrandsDTO dto = new BrandsDTO();
 			BeanUtils.copyProperties(brand, dto);
-			if(brand.getBrandImage() != null) {
+			if (brand.getBrandImage() != null) {
 				try {
-					byte[] brandImageBytes = brand.getBrandImage().getBytes(1, (int) brand.getBrandImage().length()); 
+					byte[] brandImageBytes = brand.getBrandImage().getBytes(1, (int) brand.getBrandImage().length());
 					dto.setBrandImage(brandImageBytes);
 				} catch (SQLException e) {
 					e.printStackTrace();

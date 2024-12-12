@@ -45,9 +45,7 @@ public class ProductsService {
 		try {
 
 			List<ProductsDTO> responseList = new ArrayList<>();
-//			ProductsDTO response = new ProductsDTO();
 
-//			List<Products> productEntitys = new ArrayList<>();
 			productsDTOs.forEach(dto -> {
 				ProductsDTO productDTO = new ProductsDTO();
 				Products productsEntity = new Products();
@@ -144,17 +142,22 @@ public class ProductsService {
 
 			List<ProductImages> imageList = new ArrayList<>();
 
-			productsDTO.getProductImages().forEach(image -> {
-				Blob productImageBlob = null;
+			productsDTO.getImagesDTOs().forEach(imageDTO -> {
+
+				ProductImages imageEntity = new ProductImages();
+				BeanUtils.copyProperties(imageDTO, imageEntity);
+
 				try {
-					productImageBlob = new SerialBlob(image);
+					if (imageDTO.getProductImage() != null) {
+						Blob productImageBlob = new SerialBlob(imageDTO.getProductImage());
+						imageEntity.setProductImage(productImageBlob);
+					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				ProductImages imageEntity = new ProductImages();
 				if (imageEntity.getId() == null) {
 					imageEntity.setProductId(id);
-					imageEntity.setProductImage(productImageBlob);
+//					imageEntity.setProductImage(productImageBlob);
 					imageEntity.setCreatedBy(userName);
 				} else {
 					imageEntity.setLastModifiedBy(userName);

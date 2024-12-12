@@ -23,6 +23,7 @@ import com.rekha.ecommerce.repository.OrderItemsRepository;
 import com.rekha.ecommerce.repository.OrderRepository;
 import com.rekha.ecommerce.request.OrdersRequest;
 import com.rekha.ecommerce.response.OrdersResponse;
+import com.rekha.ecommerce.utils.ImageConversion;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,15 @@ public class OrderService {
 
 			OrderDTO dto = new OrderDTO();
 			BeanUtils.copyProperties(entity, dto);
+			if (entity.getPaymentImage() != null) {
+				try {
+					byte[] byteImg = ImageConversion.blobToByteConversion(entity.getPaymentImage());
+					dto.setPaymentImage(byteImg);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
 			response.setOrderDTO(dto);
 
 			List<OrderItemsDTO> itemsDTOList = orderItemsList.stream()
@@ -85,6 +95,15 @@ public class OrderService {
 		orderRepository.findByOrderStatus(status).forEach(entity -> {
 			OrderDTO dto = new OrderDTO();
 			BeanUtils.copyProperties(entity, dto);
+			if (entity.getPaymentImage() != null) {
+				try {
+					byte[] byteImg = ImageConversion.blobToByteConversion(entity.getPaymentImage());
+					dto.setPaymentImage(byteImg);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
 			responseList.add(dto);
 		});
 
@@ -111,6 +130,11 @@ public class OrderService {
 		try {
 			Order orderEntity = new Order();
 			BeanUtils.copyProperties(dto.getOrderDTO(), orderEntity);
+
+			if (dto.getOrderDTO().getPaymentImage() != null) {
+				Blob blogImage = ImageConversion.byteToBlobConversion(dto.getOrderDTO().getPaymentImage());
+				orderEntity.setPaymentImage(blogImage);
+			}
 
 			orderEntity.setPhoneNumber(phoneNumber);
 			orderEntity.setOrderId("");
@@ -185,6 +209,15 @@ public class OrderService {
 
 			OrderDTO response = new OrderDTO();
 			BeanUtils.copyProperties(orderEntity, response);
+			if (orderEntity.getPaymentImage() != null) {
+				try {
+					byte[] byteImg = ImageConversion.blobToByteConversion(orderEntity.getPaymentImage());
+					response.setPaymentImage(byteImg);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
 
 			return ResponseObject.success(response);
 		} catch (CloudBaseException exp) {
@@ -208,6 +241,15 @@ public class OrderService {
 
 			OrderDTO dto = new OrderDTO();
 			BeanUtils.copyProperties(entity, dto);
+			if (entity.getPaymentImage() != null) {
+				try {
+					byte[] byteImg = ImageConversion.blobToByteConversion(entity.getPaymentImage());
+					dto.setPaymentImage(byteImg);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
 			response.setOrderDTO(dto);
 
 			List<OrderItemsDTO> itemsDTOList = orderItemsList.stream()
