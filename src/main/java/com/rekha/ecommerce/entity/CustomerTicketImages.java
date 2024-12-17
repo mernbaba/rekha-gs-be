@@ -1,6 +1,5 @@
 package com.rekha.ecommerce.entity;
 
-import java.sql.Blob;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,8 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -29,9 +28,12 @@ public class CustomerTicketImages {
 	@Column(name = "ticket_id")
 	private Long ticketId;
 
-	@Lob
-	@Column(name = "image")
-	private Blob image;
+//	@Lob
+//	@Column(name = "image")
+//	private Blob image;
+
+	@Column(name = "image_id")
+	private Long imageId;
 
 	@Column(name = "created_by", nullable = false, length = 32)
 	private String createdBy;
@@ -43,5 +45,9 @@ public class CustomerTicketImages {
 	@ManyToOne
 	@JoinColumn(name = "ticket_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private CustomerTickets customerTickets;
+
+	@OneToOne
+	@JoinColumn(name = "image_id", referencedColumnName = "file_storage_id", insertable = false, updatable = false)
+	private FileStorage fileStorage;
 
 }

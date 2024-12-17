@@ -1,6 +1,5 @@
 package com.rekha.ecommerce.entity;
 
-import java.sql.Blob;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,8 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -36,9 +35,12 @@ public class Brands {
 	@Column(name = "category_name", nullable = false, length = 56)
 	private String categoryName;
 
-	@Lob
-	@Column(name = "brand_image")
-	private Blob brandImage;
+//	@Lob
+//	@Column(name = "brand_image")
+//	private Blob brandImage;
+
+	@Column(name = "brand_image_id")
+	private Long brandImageId;
 
 	@Column(name = "is_active", nullable = false)
 	private Boolean isActive;
@@ -60,6 +62,10 @@ public class Brands {
 	@ManyToOne
 	@JoinColumn(name = "category_name", referencedColumnName = "category_name", insertable = false, updatable = false)
 	private Category category;
+
+	@OneToOne
+	@JoinColumn(name = "brand_image_id", referencedColumnName = "file_storage_id", insertable = false, updatable = false)
+	private FileStorage fileStorage;
 
 	@PrePersist
 	protected void onCreate() {

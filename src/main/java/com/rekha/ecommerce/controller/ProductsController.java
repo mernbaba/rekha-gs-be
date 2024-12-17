@@ -90,5 +90,11 @@ public class ProductsController {
 	public ResponseObject<List<ProductsDTO>> getProducts(@RequestBody List<ProductQuantityDTO> dtoList) {
 		return productsService.getProductsByQuantity(dtoList);
 	}
+	
+	
+	@GetMapping("/getAll")
+	public ResponseObject<List<ProductsDTO>> getAllProducts(){
+		return productsService.getAllProducts();
+	}
 
 }

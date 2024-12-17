@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.sql.rowset.serial.SerialBlob;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,7 +66,7 @@ public class OrderService {
 					.filter(items -> items.getOrderId().equals(entity.getId())).map(items -> {
 						OrderItemsDTO itemsDTO = new OrderItemsDTO();
 						BeanUtils.copyProperties(items, itemsDTO);
-						if (items.getItemImage() != null) {
+						/*if (items.getItemImage() != null) {
 							try {
 								byte[] brandImageBytes = items.getItemImage().getBytes(1,
 										(int) items.getItemImage().length());
@@ -76,7 +74,7 @@ public class OrderService {
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
-						}
+						}*/
 
 						return itemsDTO;
 					}).collect(Collectors.toList());
@@ -149,13 +147,13 @@ public class OrderService {
 			dto.getOrderItemsDTOList().forEach(items -> {
 				OrderItems orderItems = new OrderItems();
 				BeanUtils.copyProperties(items, orderItems);
-				byte[] itemImageBytes = items.getItemImage();
+				/*byte[] itemImageBytes = items.getItemImage();
 				try {
 					Blob itemImageBlob = new SerialBlob(itemImageBytes);
 					orderItems.setItemImage(itemImageBlob);
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
+				}*/
 
 				orderItems.setCreatedBy(username);
 				orderItems.setOrderId(id);
@@ -171,7 +169,7 @@ public class OrderService {
 			orderItemsList.forEach(itemsEntity -> {
 				OrderItemsDTO itemsDTO = new OrderItemsDTO();
 				BeanUtils.copyProperties(itemsEntity, itemsDTO);
-				if (itemsEntity.getItemImage() != null) {
+				/*if (itemsEntity.getItemImage() != null) {
 					try {
 						byte[] brandImageBytes = itemsEntity.getItemImage().getBytes(1,
 								(int) itemsEntity.getItemImage().length());
@@ -179,7 +177,7 @@ public class OrderService {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-				}
+				}*/
 
 				itemsDTOList.add(itemsDTO);
 			});
@@ -256,7 +254,7 @@ public class OrderService {
 					.filter(items -> items.getOrderId().equals(entity.getId())).map(items -> {
 						OrderItemsDTO itemsDTO = new OrderItemsDTO();
 						BeanUtils.copyProperties(items, itemsDTO);
-						if (items.getItemImage() != null) {
+						/*if (items.getItemImage() != null) {
 							try {
 								byte[] orderImageBytes = items.getItemImage().getBytes(1,
 										(int) items.getItemImage().length());
@@ -264,7 +262,7 @@ public class OrderService {
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
-						}
+						}*/
 
 						return itemsDTO;
 					}).collect(Collectors.toList());

@@ -11,7 +11,9 @@ public class ProductImagesDTO {
 
 	private Long productId;
 
-	private byte[] productImage;
+//	private byte[] productImage;
+
+	private Long productImageId;
 
 	private String createdBy;
 

@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -33,16 +34,19 @@ public class OrderItems {
 
 	@Column(name = "item", nullable = false, length = 100)
 	private String item;
-	
+
 	@Column(name = "product_id", nullable = false)
 	private Long productId;
 
 	@Column(name = "brand_name", nullable = false, length = 56)
 	private String brandName;
 
-	@Lob
-	@Column(name = "item_image")
-	private Blob itemImage;
+//	@Lob
+//	@Column(name = "item_image")
+//	private Blob itemImage;
+
+	@Column(name = "item_image_id")
+	private Long itemImageId;
 
 	@Column(name = "weight", nullable = false, length = 100)
 	private String weight;
@@ -73,4 +77,8 @@ public class OrderItems {
 	@ManyToOne
 	@JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Order order;
+
+	@OneToOne
+	@JoinColumn(name = "item_image_id", referencedColumnName = "file_storage_id", insertable = false, updatable = false)
+	private FileStorage fileStorage;
 }

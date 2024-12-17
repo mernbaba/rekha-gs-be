@@ -14,12 +14,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name="tb_product_images")
+@Table(name = "tb_product_images")
 public class ProductImages {
 
 	@Id
@@ -29,10 +30,13 @@ public class ProductImages {
 	@Column(name = "product_id", nullable = false)
 	private Long productId;
 
-	@Lob
-	@Column(name = "product_image")
-	private Blob productImage;
-	
+//	@Lob
+//	@Column(name = "product_image")
+//	private Blob productImage;
+
+	@Column(name = "product_image_id")
+	private Long productImageId;
+
 	@Column(name = "created_by", nullable = false, length = 32)
 	private String createdBy;
 
@@ -50,5 +54,9 @@ public class ProductImages {
 	@ManyToOne
 	@JoinColumn(name = "product_id", referencedColumnName = "product_id", insertable = false, updatable = false)
 	Products products;
+
+	@OneToOne
+	@JoinColumn(name = "product_image_id", referencedColumnName = "file_storage_id", insertable = false, updatable = false)
+	private FileStorage fileStorage;
 
 }

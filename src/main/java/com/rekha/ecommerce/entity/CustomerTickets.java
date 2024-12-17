@@ -1,7 +1,6 @@
 package com.rekha.ecommerce.entity;
 
 import java.io.Serializable;
-import java.sql.Blob;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,7 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;

@@ -15,7 +15,9 @@ public class BrandsDTO {
 	
 	private Boolean needImage;
 	
-	private byte[] brandImage;
+//	private byte[] brandImage;
+	
+	private Long brandImageId;
 	
 	private Boolean isActive;
 

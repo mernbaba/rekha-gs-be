@@ -11,7 +11,9 @@ public class BlogImagesDTO {
 
 	private Long blogId;
 
-	private byte[] blogImage;
+//	private byte[] blogImage;
+
+	private Long blogImageId;
 
 	private String createdBy;
 

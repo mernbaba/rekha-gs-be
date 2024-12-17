@@ -1,7 +1,5 @@
 package com.rekha.ecommerce.service;
 
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +22,6 @@ import com.rekha.ecommerce.repository.CustomerTicketImagesRepository;
 import com.rekha.ecommerce.repository.CustomerTicketsRepository;
 import com.rekha.ecommerce.repository.SecUserRepository;
 import com.rekha.ecommerce.request.CustomerTicketsRequest;
-import com.rekha.ecommerce.utils.ImageConversion;
 
 import jakarta.transaction.Transactional;
 
@@ -68,15 +65,16 @@ public class CustomerTicketsService {
 				CustomerTicketImages imagesEntity = new CustomerTicketImages();
 				BeanUtils.copyProperties(image, imagesEntity);
 				imagesEntity.setTicketId(id);
+				imagesEntity.setImageId(image.getImageId());
 				imagesEntity.setCreatedBy(userName);
 
-				Blob probImageBlob = null;
+				/*Blob probImageBlob = null;
 				try {
 					probImageBlob = ImageConversion.byteToBlobConversion(image.getImage());
 					imagesEntity.setImage(probImageBlob);
 				} catch (SQLException e) {
 					e.printStackTrace();
-				}
+				}*/
 
 				imagesEntList.add(imagesEntity);
 			});
@@ -96,13 +94,13 @@ public class CustomerTicketsService {
 				CustomerTicketImagesDTO imgDTO = new CustomerTicketImagesDTO();
 
 				BeanUtils.copyProperties(imgEnt, imgDTO);
-				byte[] img;
+				/*byte[] img;
 				try {
 					img = ImageConversion.blobToByteConversion(imgEnt.getImage());
 					imgDTO.setImage(img);
 				} catch (SQLException e) {
 					e.printStackTrace();
-				}
+				}*/
 				imagesDTOList.add(imgDTO);
 			});
 
@@ -173,19 +171,18 @@ public class CustomerTicketsService {
 		CustomerTicketImagesDTO imageDTO = new CustomerTicketImagesDTO();
 		BeanUtils.copyProperties(image, imageDTO);
 
-		try {
+		/*try {
 			if (image.getImage() != null) {
 				imageDTO.setImage(ImageConversion.blobToByteConversion(image.getImage()));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		return imageDTO;
 	}
 
 	public ResponseObject<List<CustomerTicketsRequest>> getTickets(String phoneNumber) {
-		
-		
+
 		List<CustomerTickets> ticketsList = new ArrayList<>();
 		try {
 
@@ -203,7 +200,6 @@ public class CustomerTicketsService {
 				throw new CloudBaseException(ResponseCode.USER_NOT_FOUND);
 			}
 
-			
 		} catch (CloudBaseException exp) {
 			throw exp;
 		} catch (Exception e) {

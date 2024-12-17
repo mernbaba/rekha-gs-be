@@ -11,7 +11,9 @@ public class CustomerTicketImagesDTO {
 
 	private Long ticketId;
 
-	private byte[] image;
+//	private byte[] image;
+	
+	private Long imageId;
 
 	private String createdBy;
 

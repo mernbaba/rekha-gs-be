@@ -20,7 +20,8 @@ public class ProductsDTO {
 
 	private Boolean priority;
 
-	private List<byte[]> productImages;
+//	private List<byte[]> productImages;
+	private List<Long> productImageIds;
 
 	private Boolean isActive;
 

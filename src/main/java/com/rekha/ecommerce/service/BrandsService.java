@@ -1,11 +1,7 @@
 package com.rekha.ecommerce.service;
 
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +34,7 @@ public class BrandsService {
 		brands.forEach(entity -> {
 			BrandsDTO dto = new BrandsDTO();
 			BeanUtils.copyProperties(entity, dto);
-			Blob brandImageBlob = entity.getBrandImage(); // Assuming getBrandImage() returns a Blob
+			/*Blob brandImageBlob = entity.getBrandImage(); // Assuming getBrandImage() returns a Blob
 			if (brandImageBlob != null) {
 				try {
 					byte[] brandImageBytes = brandImageBlob.getBytes(1, (int) brandImageBlob.length()); // Convert Blob
@@ -48,7 +44,7 @@ public class BrandsService {
 					// Handle the error if Blob conversion fails
 					e.printStackTrace();
 				}
-			}
+			}*/
 			dtoList.add(dto);
 		});
 
@@ -66,9 +62,9 @@ public class BrandsService {
 			entity = new Brands();
 			BeanUtils.copyProperties(dto, entity);
 
-			byte[] brandImageBytes = dto.getBrandImage();
+			/*byte[] brandImageBytes = dto.getBrandImage();
 			Blob brandImageBlob = new SerialBlob(brandImageBytes);
-			entity.setBrandImage(brandImageBlob);
+			entity.setBrandImage(brandImageBlob);*/
 			entity.setCreatedBy(username);
 
 			brandsRepository.save(entity);
@@ -116,14 +112,14 @@ public class BrandsService {
 		brandsRepository.findAll().forEach(brand -> {
 			BrandsDTO dto = new BrandsDTO();
 			BeanUtils.copyProperties(brand, dto);
-			if (brand.getBrandImage() != null) {
+			/*if (brand.getBrandImage() != null) {
 				try {
 					byte[] brandImageBytes = brand.getBrandImage().getBytes(1, (int) brand.getBrandImage().length());
 					dto.setBrandImage(brandImageBytes);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			}
+			}*/
 			brandsList.add(dto);
 		});
 		return ResponseObject.success(brandsList);

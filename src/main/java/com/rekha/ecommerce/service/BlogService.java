@@ -72,16 +72,16 @@ public class BlogService {
 					BlogImagesDTO imageDTO = new BlogImagesDTO();
 					BeanUtils.copyProperties(image, imageDTO);
 
-					if (image.getBlogImage() != null) {
+					/*if (image.getBlogImage() != null) {
 						try {
-
+					
 							byte[] blogImageBytes = ImageConversion.blobToByteConversion(image.getBlogImage());
-
+					
 							imageDTO.setBlogImage(blogImageBytes);
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
-					}
+					}*/
 
 					blogImagesDTOList.add(imageDTO);
 				});
@@ -106,14 +106,6 @@ public class BlogService {
 			Blog blogEntity = ObjectMapperUtil.convertDTOToEntity(dto, Blog.class);
 			SecUser secUser = secUserRepository.findByPhoneNumberAndIsActive(phoneNumber, true);
 
-			/*try {
-					if (dto.getAuthorAvatar() != null) {
-						Blob blogAvatar = ImageConversion.byteToBlobConversion(dto.getAuthorAvatar());
-						blogEntity.setAuthorAvatar(blogAvatar);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}*/
 			if (secUser != null && secUser.getProfile() != null) {
 				blogEntity.setAuthorAvatar(secUser.getProfile());
 			}
@@ -125,17 +117,18 @@ public class BlogService {
 			List<BlogImages> imagesList = new ArrayList<>();
 
 			dto.getImages().forEach(image -> {
-				Blob blogImageBlob = null;
+				/*Blob blogImageBlob = null;
 				try {
 					if (image.getBlogImage() != null) {
 						blogImageBlob = ImageConversion.byteToBlobConversion(image.getBlogImage());
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
-				}
-				BlogImages imageEntity = new BlogImages();
+				}*/
+				BlogImages imageEntity = ObjectMapperUtil.convertDTOToEntity(image, BlogImages.class);
+				
 				imageEntity.setBlogId(id);
-				imageEntity.setBlogImage(blogImageBlob);
+				imageEntity.setBlogImageId(image.getBlogImageId());
 				imageEntity.setCreatedBy(userName);
 				imagesList.add(imageEntity);
 			});
@@ -148,26 +141,16 @@ public class BlogService {
 				BlogImagesDTO imageDTO = ObjectMapperUtil.convertEntityToDTO(image, BlogImagesDTO.class);
 //				BeanUtils.copyProperties(image, imageDTO);
 
-				Blob blogImageBlob = image.getBlogImage();
-				if (blogImageBlob != null) {
-					try {
-						byte[] byteImage = ImageConversion.blobToByteConversion(blogImageBlob);
-						imageDTO.setBlogImage(byteImage);
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-
 				imageDTOList.add(imageDTO);
 			});
 
 //			BlogDTO response = ObjectMapperUtil.convertEntityToDTO(blogEntity, BlogDTO.class);
 			BlogDTO response = new BlogDTO();
 
-			Blob blogImageBlob = blogEntity.getAuthorAvatar();
-			if (blogImageBlob != null) {
+			Blob avatarBlob = blogEntity.getAuthorAvatar();
+			if (avatarBlob != null) {
 				try {
-					byte[] byteImage = ImageConversion.blobToByteConversion(blogImageBlob);
+					byte[] byteImage = ImageConversion.blobToByteConversion(avatarBlob);
 					response.setAuthorAvatar(byteImage);
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -207,22 +190,23 @@ public class BlogService {
 			List<BlogImages> imagesList = new ArrayList<>();
 
 			dto.getImages().forEach(image -> {
-				Blob blogImageBlob = null;
+				/*Blob blogImageBlob = null;
 				try {
 					if (image.getBlogImage() != null) {
 						blogImageBlob = ImageConversion.byteToBlobConversion(image.getBlogImage());
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
-				}
+				}*/
 				BlogImages imageEntity = new BlogImages();
 				if (imageEntity.getId() == null) {
 					imageEntity.setBlogId(id);
-					imageEntity.setBlogImage(blogImageBlob);
+//					imageEntity.setBlogImage(blogImageBlob);
 					imageEntity.setCreatedBy(userName);
 				} else {
 					imageEntity.setLastModifiedBy(userName);
 				}
+				image.setBlogImageId(image.getBlogImageId());
 				imagesList.add(imageEntity);
 			});
 
@@ -232,21 +216,19 @@ public class BlogService {
 			imagesList.forEach(image -> {
 				BlogImagesDTO imageDTO = new BlogImagesDTO();
 
-				Blob blogImageBlob = image.getBlogImage();
+				/*Blob blogImageBlob = image.getBlogImage();
 				if (blogImageBlob != null) {
 					try {
 						ImageConversion.blobToByteConversion(blogImageBlob);
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-				}
+				}*/
 
 				BeanUtils.copyProperties(image, imageDTO);
 				imageDTOList.add(imageDTO);
 			});
 			BlogDTO response = ObjectMapperUtil.convertEntityToDTO(blogEntity, BlogDTO.class);
-
-//			BlogDTO response = new BlogDTO();
 
 			Blob blogAvatar = blogEntity.getAuthorAvatar();
 			if (blogAvatar != null) {

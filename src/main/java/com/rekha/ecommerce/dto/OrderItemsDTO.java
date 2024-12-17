@@ -13,7 +13,10 @@ public class OrderItemsDTO {
 	private String item;
 	private Long productId;
 	private String brandName;
-	private byte[] itemImage;
+//	private byte[] itemImage;
+
+	private Long itemImageId;
+
 	private String weight;
 	private BigDecimal rate;
 	private Integer qty;
